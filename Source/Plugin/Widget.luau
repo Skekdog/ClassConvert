@@ -26,6 +26,31 @@ widget.Title = "Class Convert"
 widget.ResetOnSpawn = false
 widget.Enabled = false
 
+local CHECKBOX_ON_DARK = "rbxasset://studio_svg_textures/Shared/Utility/Dark/Standard/CheckboxOn@3x.png"
+local CHECKBOX_OFF_DARK = "rbxasset://studio_svg_textures/Shared/Utility/Dark/Standard/CheckboxOff@3x.png"
+
+local CHECKBOX_ON_LIGHT = "rbxasset://studio_svg_textures/Shared/Utility/Light/Standard/CheckboxOn@3x.png"
+local CHECKBOX_OFF_LIGHT = "rbxasset://studio_svg_textures/Shared/Utility/Light/Standard/CheckboxOff@3x.png"
+
+local function getCheckboxImage(enabled: boolean): string
+	local theme = settings().Studio.Theme
+	local isDark = theme.Name == "Dark"
+
+	if enabled then
+		if isDark then
+			return CHECKBOX_ON_DARK
+		else
+			return CHECKBOX_ON_LIGHT
+		end
+	else
+		if isDark then
+			return CHECKBOX_OFF_DARK
+		else
+			return CHECKBOX_OFF_LIGHT
+		end
+	end
+end
+
 local showDeprecated = plugin:GetSetting("ShowDeprecated") or false
 local showNonBrowsable = plugin:GetSetting("ShowNonBrowsable") or false
 
@@ -50,7 +75,7 @@ local function levenshtein(a: string, b: string)
 			matrix[i][j] = math.min(matrix[i-1][j] + 1, matrix[i][j-1] + 1, matrix[i-1][j-1] + cost)
 		end
 	end
-	
+
 	return matrix[len1][len2]
 end
 
@@ -60,13 +85,13 @@ do
 	padding.PaddingRight = UDim.new(0.025, 0)
 	padding.PaddingTop = UDim.new(0.025, 0)
 	padding.Parent = frame
-	
+
 	local list = Instance.new("UIListLayout")
 	list.Padding = UDim.new(0, 10)
 	list.FillDirection = Enum.FillDirection.Vertical
 	list.SortOrder = Enum.SortOrder.LayoutOrder
 	list.Parent = frame
-	
+
 	local separator = Instance.new("Frame")
 	separator.BackgroundColor3 = Color3.new(0, 0, 0)
 	separator.Size = UDim2.fromScale(1, 0.01)
@@ -101,13 +126,13 @@ do
 	label.Parent = showDeprecatedFrame
 	label.TextXAlignment = Enum.TextXAlignment.Left
 	table.insert(colourSyncTargets, label)
-	
+
 	local list = Instance.new("UIListLayout")
 	list.FillDirection = Enum.FillDirection.Horizontal
 	list.SortOrder = Enum.SortOrder.LayoutOrder
 	list.Padding = UDim.new(0, 10)
 	list.Parent = showDeprecatedFrame
-	
+
 	local aspectRatio = Instance.new("UIAspectRatioConstraint")
 	aspectRatio.DominantAxis = Enum.DominantAxis.Height
 	aspectRatio.Parent = showDeprecatedButton
@@ -169,7 +194,7 @@ do
 	local corner = Instance.new("UICorner")
 	corner.CornerRadius = UDim.new(0.4, 0)
 	corner.Parent = searchBar
-	
+
 	local padding = Instance.new("UIPadding")
 	padding.PaddingLeft = UDim.new(0, 10)
 	padding.Parent = searchBar
@@ -205,17 +230,17 @@ do
 	local corner = Instance.new("UICorner")
 	corner.CornerRadius = UDim.new(0.25)
 	corner.Parent = resultBase
-	
+
 	local list = Instance.new("UIListLayout")
 	list.FillDirection = Enum.FillDirection.Horizontal
 	list.Padding = UDim.new(0, 5)
 	list.VerticalAlignment = Enum.VerticalAlignment.Center
 	list.Parent = resultBase
-	
+
 	local padding = Instance.new("UIPadding")
 	padding.PaddingLeft = UDim.new(0, 10)
 	padding.Parent = resultBase
-	
+
 	local label = Instance.new("TextLabel")
 	label.Font = Enum.Font.SourceSans
 	label.TextScaled = true
@@ -224,14 +249,14 @@ do
 	label.BackgroundTransparency = 1
 	label.Name = "Label"
 	label.Parent = resultBase
-	
+
 	local icon = Instance.new("ImageLabel")
 	icon.Name = "Icon"
 	icon.BackgroundTransparency = 1
 	icon.Size = UDim2.fromScale(1, 0.9)
 	icon.Image = ""
 	icon.Parent = resultBase
-	
+
 	do
 		local aspectRatio = Instance.new("UIAspectRatioConstraint")
 		aspectRatio.DominantAxis = Enum.DominantAxis.Height
@@ -267,7 +292,7 @@ local function fetchProperties(classToCollect: string)
 			end
 			for _, member in class.Members do
 				if member.MemberType == "Property" then
-					table.insert(props, member.Name)
+					table.insert(props, member.Name :: string)
 				end
 			end
 			classToCollect = class.Superclass
@@ -284,15 +309,15 @@ local function convert(from: {Instance}, to: string): {Instance}?
 		warn("No selection, conversions will not be made.")
 		return nil
 	end
-	
+
 	local recording = ChangeHistoryService:TryBeginRecording(`Convert classes of selection to {to}`)
 	if not recording then
 		warn("Unable to create undo waypoint, possibly due to another conversion already taking place. Conversion aborted.")
 		return nil
 	end
-	
+
 	local newSelections: {Instance} = {}
-	
+
 	local success = pcall(function() -- In case anything errors we NEED undo to be possible, best not take chances
 		for _, instance in from do
 			local new: Instance = Instance.new(to)
@@ -306,11 +331,11 @@ local function convert(from: {Instance}, to: string): {Instance}?
 			for _, v in instance:GetChildren() do
 				v.Parent = new
 			end
-			
+
 			for i, v in instance:GetAttributes() do
 				new:SetAttribute(i, v)
 			end
-			
+
 			for _, v in instance:GetTags() do
 				new:AddTag(v)
 			end
@@ -319,7 +344,7 @@ local function convert(from: {Instance}, to: string): {Instance}?
 			table.insert(newSelections, new)
 		end
 	end)
-	
+
 	ChangeHistoryService:FinishRecording(recording, if success then Enum.FinishRecordingOperation.Commit else Enum.FinishRecordingOperation.Cancel)
 	return newSelections
 end
@@ -346,19 +371,19 @@ for _, class in apiDump do
 	if class.Name:sub(1, 18) == "ReflectionMetadata" or table.find(invalidClasses, class.Name) then
 		continue
 	end
-	
+
 	local name = class.Name
-	
+
 	local canBeCreated = pcall(function()
 		Instance.new(name)
 	end)
-	
+
 	if not canBeCreated then
 		continue
 	end
 
 	superclasses[name] = class.Superclass
-	
+
 	local result = resultBase:Clone();
 	(result:FindFirstChild("Label") :: TextLabel).Text = name
 	result:SetAttribute("Deprecated", isDeprecated)
@@ -426,11 +451,11 @@ local function updateSearch()
 			v.Visible = false
 		end
 	end
-	
-	table.sort(visibleElements, function(a, b)
+
+	table.sort(visibleElements, function(a: TextButton, b: TextButton)
 		return levenshtein(a.Name:lower(), text) < levenshtein(b.Name:lower(), text)
 	end)
-	
+
 	for i, v in visibleElements do
 		v.LayoutOrder = i
 	end
@@ -441,14 +466,14 @@ searchBar:GetPropertyChangedSignal("Text"):Connect(updateSearch)
 showDeprecatedButton.MouseButton1Click:Connect(function()
 	showDeprecated = not showDeprecated
 	plugin:SetSetting("ShowDeprecated", showDeprecated)
-	showDeprecatedButton.Image = if showDeprecated then "rbxasset://studio_svg_textures/Shared/Utility/Light/Standard/CheckboxOn@3x.png" else "rbxasset://studio_svg_textures/Shared/Utility/Light/Standard/CheckboxOff@3x.png"
+	showDeprecatedButton.Image = getCheckboxImage(showDeprecated)
 	updateSearch()
 end)
 
 showNonBrowsableButton.MouseButton1Click:Connect(function()
 	showNonBrowsable = not showNonBrowsable
 	plugin:SetSetting("ShowNonBrowsable", showNonBrowsable)
-	showNonBrowsableButton.Image = if showNonBrowsable then "rbxasset://studio_svg_textures/Shared/Utility/Light/Standard/CheckboxOn@3x.png" else "rbxasset://studio_svg_textures/Shared/Utility/Light/Standard/CheckboxOff@3x.png"
+	showNonBrowsableButton.Image = getCheckboxImage(showNonBrowsable)
 	updateSearch()
 end)
 
