@@ -1,10 +1,10 @@
-# Class Convert
+# Important!
+### Requires the NewReflectionService FFlag to be enabled. For this reason, the plugin is not currently published on the Creator Store; however, it can be freely used from here. The V1 Class Convert, which does not require this FFlag, can be found [here](https://github.com/Skekdog/ClassConvertV1).
 
-![Class Convert](./Assets/ClassConvert.png)
+# Class Convert V2
 
-A Roblox Studio plugin that converts selected Instances into another class, preserving attributes, tags, descendants, and applicable properties.
-Class Convert V2 can be found [here](https://github.com/Skekdog/UNSTABLE-ClassConvert); HOWEVER, FFLAGS MUST BE SET TO USE THAT PLUGIN. Class Convert V1 will continue to be maintained until ReflectionService is fully enabled.
+![Class Convert Logo](./Assets/ClassConvert.png)
 
-Available on the Creator Store [here](https://create.roblox.com/store/asset/17107089749).
+A free Roblox Studio plugin designed for the conversion of Instances from one class to another, whilst preserving properties, attributes, tags, and children.
 
 Free forever.
