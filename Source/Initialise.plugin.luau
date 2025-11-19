@@ -6,10 +6,9 @@ if not RunService:IsServer() and not RunService:IsEdit() then
 end
 
 local Toolbar = require("./Plugin/Toolbar")
-local Widget = require("./Plugin/Widget")
-
-Widget.PopulateClasses()
 
 Toolbar.OnClick = function()
+	local Widget = require("./Plugin/Widget")
+	Widget.PopulateClasses()
 	Widget.ToggleWidget()
 end
