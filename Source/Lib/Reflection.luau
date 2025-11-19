@@ -87,7 +87,7 @@ function module.GetPropertiesOfClass(className: string): GetPropertiesOfClassRes
 end
 
 function module.GetClass(className: string): Class
-	return ReflectionService:GetClass(className) or error("Class not found: " .. className)
+	return (ReflectionService:GetClass(className) :: Class?) or error("Class not found: " .. className)
 end
 
 return module

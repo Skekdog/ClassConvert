@@ -37,13 +37,13 @@ do
 	padding.PaddingRight = UDim.new(0.025, 0)
 	padding.PaddingTop = UDim.new(0.025, 0)
 	padding.Parent = frame
-	
+
 	local list = Instance.new("UIListLayout")
 	list.Padding = UDim.new(0, 10)
 	list.FillDirection = Enum.FillDirection.Vertical
 	list.SortOrder = Enum.SortOrder.LayoutOrder
 	list.Parent = frame
-	
+
 	local separator = Instance.new("Frame")
 	separator.BackgroundColor3 = Color3.new(0, 0, 0)
 	separator.Size = UDim2.fromScale(1, 0.01)
@@ -71,7 +71,7 @@ do
 	local corner = Instance.new("UICorner")
 	corner.CornerRadius = UDim.new(0.4, 0)
 	corner.Parent = searchBar
-	
+
 	local padding = Instance.new("UIPadding")
 	padding.PaddingLeft = UDim.new(0, 10)
 	padding.Parent = searchBar
@@ -107,17 +107,17 @@ do
 	local corner = Instance.new("UICorner")
 	corner.CornerRadius = UDim.new(0.25)
 	corner.Parent = resultBase
-	
+
 	local list = Instance.new("UIListLayout")
 	list.FillDirection = Enum.FillDirection.Horizontal
 	list.Padding = UDim.new(0, 5)
 	list.VerticalAlignment = Enum.VerticalAlignment.Center
 	list.Parent = resultBase
-	
+
 	local padding = Instance.new("UIPadding")
 	padding.PaddingLeft = UDim.new(0, 10)
 	padding.Parent = resultBase
-	
+
 	local label = Instance.new("TextLabel")
 	label.Font = Enum.Font.SourceSans
 	label.TextScaled = true
@@ -126,14 +126,14 @@ do
 	label.BackgroundTransparency = 1
 	label.Name = "Label"
 	label.Parent = resultBase
-	
+
 	local icon = Instance.new("ImageLabel")
 	icon.Name = "Icon"
 	icon.BackgroundTransparency = 1
 	icon.Size = UDim2.fromScale(1, 0.9)
 	icon.Image = ""
 	icon.Parent = resultBase
-	
+
 	do
 		local aspectRatio = Instance.new("UIAspectRatioConstraint")
 		aspectRatio.DominantAxis = Enum.DominantAxis.Height
@@ -155,11 +155,11 @@ local function updateSearch()
 			v.Visible = false
 		end
 	end
-	
-	table.sort(visibleElements, function(a, b)
+
+	table.sort(visibleElements, function(a: TextButton, b: TextButton)
 		return Levenshtein(a.Name:lower(), text) < Levenshtein(b.Name:lower(), text)
 	end)
-	
+
 	for i, v in visibleElements do
 		v.LayoutOrder = i
 	end
