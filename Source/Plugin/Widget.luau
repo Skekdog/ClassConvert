@@ -11,7 +11,7 @@ local module = {}
 
 local colourSyncTargets: {GuiObject} = {}
 
-local widget = plugin:CreateDockWidgetPluginGui("ClassConvert", DockWidgetPluginGuiInfo.new(
+local widget = plugin:CreateDockWidgetPluginGuiAsync("ClassConvert", DockWidgetPluginGuiInfo.new(
 	Enum.InitialDockState.Float,
 	false,
 	true,
