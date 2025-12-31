@@ -194,6 +194,10 @@ local function syncOne(v: GuiObject, theme: any)
 		(v :: TextLabel).BackgroundColor3 = theme:GetColor(Enum.StudioStyleGuideColor.ScriptEditorCurrentLine);
 		(v :: TextLabel).TextColor3 = theme:GetColor(Enum.StudioStyleGuideColor.MainText)
 	end
+
+	if v:IsA("ScrollingFrame") then
+		v.ScrollBarImageColor3 = theme:GetColor(Enum.StudioStyleGuideColor.MainText)
+	end
 end
 
 local function addClass(class: Reflection.Class): ()
