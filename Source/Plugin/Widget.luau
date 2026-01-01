@@ -233,7 +233,14 @@ end
 syncColours()
 settings().Studio.ThemeChanged:Connect(syncColours)
 
+local didPopulate = false
 function module.PopulateClasses(): ()
+	if didPopulate then
+		return
+	end
+
+	didPopulate = true
+
 	local classes = Reflection.GetClasses()
 	for _, class in classes do
 		if not class.Permits.New then
