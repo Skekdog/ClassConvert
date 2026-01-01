@@ -27,6 +27,14 @@ local function convert(from: Instance, to: string): Instance
 	new.Parent = from.Parent
 	from.Parent = nil -- :Destroy() locks the parent property, which means that undo does not work!
 
+	-- Querying the entire game is a scary prospect, but testing in Traitor! it only took a few ms to complete
+	for _, instance in game:QueryDescendants("ObjectValue") do
+		assert(instance:IsA("ObjectValue"))
+		if instance.Value == from then
+			instance.Value = new
+		end
+	end
+
 	return new
 end
 
