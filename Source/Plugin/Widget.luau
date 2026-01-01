@@ -206,8 +206,6 @@ local function addClass(class: Reflection.Class): ()
 	local icon = result:FindFirstChild("Icon") :: ImageLabel
 
 	label.Text = class.Name
-	result:SetAttribute("Deprecated", false)
-	result:SetAttribute("NonBrowsable", false)
 	result.Name = class.Name
 
 	result.Parent = resultsGrid
